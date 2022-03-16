@@ -1,4 +1,6 @@
 import express from "express";
+import http from "http";
+import websocket from "ws";
 
 const app = express();
 
@@ -8,8 +10,12 @@ app.use("/public", express.static(__dirname + "/public"));
 app.get("/", (req, res) => res.render("home"));
 app.get("/*", (req, res) => res.redirect("/"));
 
-const hadleListen = () => {
+const handleListen = () => {
     console.log(`Listening on: https://localhost:3000`);
 }
-app.listen(3000, hadleListen);
+
+const server = http.createServer(app);
+const wss = new websocket.Server({ server });
+
+server.listen(3000, handleListen);
 
