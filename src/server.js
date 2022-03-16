@@ -17,5 +17,13 @@ const handleListen = () => {
 const server = http.createServer(app);
 const wss = new websocket.Server({ server });
 
+wss.on("connection", (socket) => {
+    console.log("connected to Browser");
+    socket.on("message", (message) => {
+        console.log(`message : ${message} from frontEnd`);
+    });
+    socket.send("Hello!");
+    socket.on("close", () => { console.log("Disconnected from the Browser") });
+});
 server.listen(3000, handleListen);
 
