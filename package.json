@@ -7,9 +7,16 @@
     "dev": "nodemon"
   },
   "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/cli": "^7.16.8",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
     "nodemon": "^2.0.15"
   },
   "author": "",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.17.2",
+    "pug": "^3.0.2"
+  }
 }
