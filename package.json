@@ -1,0 +1,15 @@
+{
+  "name": "zoom-clone-2021",
+  "version": "1.0.0",
+  "description": "Zoom clone using NodeJS, WebRTC and WebSockets",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {}
+}
