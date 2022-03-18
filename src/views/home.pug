@@ -10,6 +10,12 @@ html(lang="en")
         header 
             h1 It works!
         main 
-            h2 Welcome to Choom 
+            form#nickForm
+                input(type="text", placeholder ="Choose Your Nickname" required)
+                button Save
+            ul 
+            form#message
+                input(type="text", placeholder ="Write Message" required)
+                button Send
            
         script(src="/public/js/app.js")    

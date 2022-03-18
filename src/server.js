@@ -17,15 +17,25 @@ const handleListen = () => {
 const server = http.createServer(app);
 const wss = new websocket.Server({ server });
 
-wss.on("connection", (socket) => {
-    console.log("connected to Browser"); //브라우저와 연결 성공시 
+const sockets = [];
 
-    socket.on("message", (message) => {
-        console.log(`message : ${message} from frontEnd`); //브라우저에서 보내는 메세지를 받는다.
+wss.on("connection", (socket) => {
+    sockets.push(socket);
+    socket["nickname"] = "Anonymous";
+    console.log("connected to Browser"); //브라우저와 연결 성공시 
+    socket.on("close", () => { console.log("Disconnected from the Browser") }); //브라우저 연결이 끊어지면 발생
+
+    socket.on("message", (msg) => {
+        const message = JSON.parse(msg);
+        switch (message.type) {
+            case "new_Message":
+                sockets.forEach((aSocket) => aSocket.send(`${socket.nickname}:${message.payload}`));
+            case "nickname":
+                socket["nickname"] = message.payload;
+        }
     });
 
-    socket.send("Hello!");
-    socket.on("close", () => { console.log("Disconnected from the Browser") }); //브라우저 연결이 끊어지면 발생
+
 });
 server.listen(3000, handleListen);
 
