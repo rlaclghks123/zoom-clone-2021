@@ -10,5 +10,9 @@ html(lang="en")
         header 
             h1 Choom
         main
+            div#welcome
+                form
+                    input(type="text" required placeholder="Room Name")
+                    button Enter Room
         script(src="/socket.io/socket.io.js")    
         script(src="/public/js/app.js")    
