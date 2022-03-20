@@ -11,7 +11,10 @@ html(lang="en")
             h1 Choom
         main
             div#welcome
-                form
+                form#nicknameForm
+                    input(type="text" required placeholder="Nickname")
+                    button Save    
+                form#roomnameForm
                     input(type="text" required placeholder="Room Name")
                     button Enter Room
             div#room
