@@ -29,6 +29,10 @@ webServer.on("connection", (socket) => {
     socket.on("disconnecting", () => {
         socket.rooms.forEach((room) => socket.to(room).emit("bye"));
     });
+    socket.on("new_Message", (msg, roomName, done) => {
+        socket.to(roomName).emit("new_Message", msg);
+        done();
+    })
 
 });
 server.listen(3000, handleListen);
