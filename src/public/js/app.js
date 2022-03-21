@@ -65,3 +65,15 @@ socket.on("bye", (user) => {
 
 socket.on("new_Message", addMessage);
 
+socket.on("room_Change", (rooms) => {
+    const roomList = welcome.querySelector("ul");
+    roomList.innerHTML = "";
+    rooms.forEach((room) => {
+        const li = document.createElement("li");
+        li.innerText = room;
+        if (room.length === 0) {
+            return;
+        }
+        roomList.append(li);
+    })
+})
