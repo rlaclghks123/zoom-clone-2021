@@ -33,7 +33,6 @@ const showRoom = () => {
     h3.innerText = `Room ${roomName}`;
     const form = room.querySelector("form");
     form.addEventListener("submit", handleMessageSubmit);
-    nicknameForm.addEventListener("submit", handleNicknameSubmit);
 }
 
 const handleNicknameSubmit = (event) => {
@@ -52,6 +51,7 @@ const handleRoomSubmit = (event) => {
     input.value = "";
 }
 
+nicknameForm.addEventListener("submit", handleNicknameSubmit);
 roomnameform.addEventListener("submit", handleRoomSubmit);
 
 socket.on("welcome", (user, roomCount) => {

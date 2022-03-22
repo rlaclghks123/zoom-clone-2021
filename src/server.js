@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
-import socketIO from "socket.io";
+import { instrument } from "@socket.io/admin-ui";
+import { Server } from "socket.io";
 
 const app = express();
 
@@ -15,7 +16,16 @@ const handleListen = () => {
 }
 
 const server = http.createServer(app);
-const webServer = socketIO(server);
+const webServer = new Server(server, {
+    cors: {
+        origin: ["https://admin.socket.io"],
+        credentials: true
+    }
+});
+instrument(webServer, {
+    auth: false
+});
+
 
 function countRoom(roomName) {
     return webServer.sockets.adapter.rooms.get(roomName)?.size;
