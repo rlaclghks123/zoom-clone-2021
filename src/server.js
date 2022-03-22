@@ -1,6 +1,5 @@
 import express from "express";
 import http from "http";
-import { off } from "process";
 import socketIO from "socket.io";
 
 const app = express();
@@ -18,6 +17,9 @@ const handleListen = () => {
 const server = http.createServer(app);
 const webServer = socketIO(server);
 
+function countRoom(roomName) {
+    return webServer.sockets.adapter.rooms.get(roomName)?.size;
+}
 
 const publicRoom = () => {
     const { sockets: { adapter: { sids, rooms } } } = webServer;
@@ -35,22 +37,27 @@ webServer.on("connection", (socket) => {
     socket.onAny((event) => {
         console.log(`Socket Event: ${event}`);
     });
+    // enter Room
     socket.on("enter_room", (roomName, done) => {
         socket.join(roomName);
         done();
-        socket.to(roomName).emit("welcome", socket.nickname);
+        socket.to(roomName).emit("welcome", socket.nickname, countRoom(roomName));
         webServer.sockets.emit("room_Change", publicRoom());
     });
+    // disconnecting
     socket.on("disconnecting", () => {
-        socket.rooms.forEach((room) => socket.to(room).emit("bye", socket.nickname));
+        socket.rooms.forEach((room) => socket.to(room).emit("bye", socket.nickname, countRoom(room) - 1));
     });
+    // disconnect
     socket.on("disconnect", () => {
         webServer.sockets.emit("room_Change", publicRoom());
     })
+    // new Message
     socket.on("new_Message", (msg, roomName, done) => {
         socket.to(roomName).emit("new_Message", `${socket.nickname} : ${msg}`);
         done();
     });
+    // nickname
     socket.on("nickname", (nickname) => socket["nickname"] = nickname);
 
 

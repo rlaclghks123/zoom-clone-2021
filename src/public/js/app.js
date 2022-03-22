@@ -28,12 +28,12 @@ const handleMessageSubmit = (event) => {
 
 const showRoom = () => {
     welcome.hidden = true;
-
     room.hidden = false;
     const h3 = room.querySelector("h3");
     h3.innerText = `Room ${roomName}`;
     const form = room.querySelector("form");
     form.addEventListener("submit", handleMessageSubmit);
+    nicknameForm.addEventListener("submit", handleNicknameSubmit);
 }
 
 const handleNicknameSubmit = (event) => {
@@ -53,13 +53,16 @@ const handleRoomSubmit = (event) => {
 }
 
 roomnameform.addEventListener("submit", handleRoomSubmit);
-nicknameForm.addEventListener("submit", handleNicknameSubmit);
 
-socket.on("welcome", (user) => {
+socket.on("welcome", (user, roomCount) => {
+    const h3 = room.querySelector("h3");
+    h3.innerText = `Room ${roomName} (${roomCount} 명)`;
     addMessage(`${user} arrived!`);
 });
 
-socket.on("bye", (user) => {
+socket.on("bye", (user, roomCount) => {
+    const h3 = room.querySelector("h3");
+    h3.innerText = `Room ${roomName} (${roomCount} 명)`;
     addMessage(`${user} left!`);
 });
 
