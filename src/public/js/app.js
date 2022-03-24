@@ -84,17 +84,18 @@ cameraSelect.addEventListener("input", handleCameraChange);
 const welcome = document.getElementById("welcome");
 const welcomeForm = welcome.querySelector("form");
 
-async function startMedia() {
+async function initCall() {
     welcome.hidden = true;
     call.hidden = false;
     await getMedia();
     makeConnection();
 }
 
-function handleWelcome(e) {
+async function handleWelcome(e) {
     e.preventDefault();
     const input = welcomeForm.querySelector("input");
-    socketIo.emit("join_room", input.value, startMedia);
+    await initCall();
+    socketIo.emit("join_room", input.value);
     roomname = input.value;
     input.value = "";
 }
@@ -107,8 +108,15 @@ socketIo.on("welcome", async () => {
     socketIo.emit("offer", offer, roomname);
 });
 
-socketIo.on("offer", (offer) => {
-    console.log(offer);
+socketIo.on("offer", async (offer) => {
+    myPeerConnection.setRemoteDescription(offer);
+    const answer = await myPeerConnection.createAnswer();
+    myPeerConnection.setLocalDescription(answer);
+    socketIo.emit("answer", roomname, answer);
+});
+
+socketIo.on("answer", (answer) => {
+    myPeerConnection.setRemoteDescription(answer);
 })
 //webRTC
 
