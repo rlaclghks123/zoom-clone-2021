@@ -18,6 +18,9 @@ webServer.on("connection", (socket) => {
         done();
         socket.to(roomname).emit("welcome");
     });
+    socket.on("offer", (offer, roomname) => {
+        socket.to(roomname).emit("offer", offer);
+    });
 });
 
 
