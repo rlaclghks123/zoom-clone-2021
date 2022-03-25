@@ -20,8 +20,11 @@ webServer.on("connection", (socket) => {
     socket.on("offer", (offer, roomname) => {
         socket.to(roomname).emit("offer", offer);
     });
-    socket.on("answer", (roomname, answer) => {
+    socket.on("answer", (answer, roomname) => {
         socket.to(roomname).emit("answer", answer);
+    });
+    socket.on("ice", (ice, roomname) => {
+        socket.to(roomname).emit("ice", ice);
     })
 });
 
