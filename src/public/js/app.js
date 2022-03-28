@@ -158,11 +158,9 @@ createRoomForm.addEventListener("submit", handleWelcome);
 socketIo.on("welcome", async () => {
     myDataChannel = myPeerConnection.createDataChannel("chat");
     myDataChannel.addEventListener("open", () => {
-        chatForm.addEventListener("submit", handleSendOffer);
+        chatForm.addEventListener("submit", handleSend);
     });
-    myDataChannel.addEventListener("message", (e) => {
-        console.log("The answer is :", e.data);
-    })
+    myDataChannel.addEventListener("message", handleGet);
     const offer = await myPeerConnection.createOffer();
     myPeerConnection.setLocalDescription(offer);
     socketIo.emit("offer", offer, roomname);
@@ -177,23 +175,36 @@ socketIo.on("bye", (nickname) => {
     li.append(span);
 });
 
-function handleSendOffer(event) {
+function handleSend(event) {
     event.preventDefault();
     const input = chatForm.querySelector("input");
+    const ul = chatDiv.querySelector("ul");
+    const li = document.createElement("li");
     const value = input.value;
     myDataChannel.send(value);
+    const span = document.createElement("span");
+    span.innerText = `You: ${value}`;
+    ul.append(li);
+    li.append(span);
     input.value = "";
+}
+
+function handleGet(event) {
+    const ul = chatDiv.querySelector("ul");
+    const li = document.createElement("li");
+    const span = document.createElement("span");
+    span.innerText = `${nickname} : ${event.data}`;
+    ul.append(li);
+    li.append(span);
 }
 
 socketIo.on("offer", async (offer) => {
     myPeerConnection.addEventListener("datachannel", (event) => {
         myDataChannel = event.channel;
         myDataChannel.addEventListener("open", () => {
-            chatForm.addEventListener("submit", handleSendOffer);
+            chatForm.addEventListener("submit", handleSend);
         });
-        myDataChannel.addEventListener("message", (event) => {
-            console.log("The offer is : ", event.data);
-        });
+        myDataChannel.addEventListener("message", handleGet);
     });
     console.log("received the offer");
     myPeerConnection.setRemoteDescription(offer);
