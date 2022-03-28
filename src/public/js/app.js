@@ -7,6 +7,7 @@ const cameraSelect = document.getElementById("cameras");
 const call = document.getElementById("call");
 const chatDiv = document.getElementById("chatroom");
 const chatForm = chatDiv.querySelector("form");
+const chatContent = chatDiv.querySelector("#chatContent");
 
 call.hidden = true;
 
@@ -107,26 +108,16 @@ function handleNickname(e) {
 }
 
 function addMessage(nickname) {
-    const ul = chatDiv.querySelector("ul");
-    const li = document.createElement("li");
     const span = document.createElement("span");
     span.innerText = `${nickname} 이 입장했습니다.`;
-    ul.append(li);
-    li.append(span);
+    chatContent.append(span);
 }
 
 socketIo.on("nickname", addMessage);
 nicknameForm.addEventListener("submit", handleNickname);
 
 // chat form
-function handleChat(event) {
-    event.preventDefault();
-    const input = chatForm.querySelector("input");
 
-}
-
-
-chatForm.addEventListener("submit", handleChat);
 
 //welcome form
 
@@ -167,35 +158,27 @@ socketIo.on("welcome", async () => {
 });
 
 socketIo.on("bye", (nickname) => {
-    const ul = chatDiv.querySelector("ul");
-    const li = document.createElement("li");
     const span = document.createElement("span");
     span.innerText = `${nickname} 님이 퇴장하셨습니다.`;
-    ul.append(li);
-    li.append(span);
+    chatContent.append(span);
 });
 
 function handleSend(event) {
     event.preventDefault();
     const input = chatForm.querySelector("input");
-    const ul = chatDiv.querySelector("ul");
-    const li = document.createElement("li");
     const value = input.value;
     myDataChannel.send(value);
     const span = document.createElement("span");
+    span.innerText = `${nickname} : ${event.data}`;
     span.innerText = `You: ${value}`;
-    ul.append(li);
-    li.append(span);
+    chatContent.append(span);
     input.value = "";
 }
 
 function handleGet(event) {
-    const ul = chatDiv.querySelector("ul");
-    const li = document.createElement("li");
     const span = document.createElement("span");
     span.innerText = `${nickname} : ${event.data}`;
-    ul.append(li);
-    li.append(span);
+    chatContent.append(span);
 }
 
 socketIo.on("offer", async (offer) => {

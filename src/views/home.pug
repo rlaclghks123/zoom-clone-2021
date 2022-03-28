@@ -29,9 +29,10 @@ html(lang="en")
                     select#cameras
                     video#peerFace(autoplay, playinline, width="400", height="400")
                 div#chatroom
-                    ul 
-                    form
-                        input(type="text", placeholder="Write Your Message")
-                        button Send    
+                    div#chatContent
+                    div#chatForm
+                        form
+                            input(type="text", placeholder="Write Your Message")
+                            button Send    
         script(src="/socket.io/socket.io.js")    
         script(src="/public/js/app.js")    
