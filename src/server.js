@@ -13,20 +13,37 @@ const httpServer = http.createServer(app);
 const webServer = socketIO(httpServer);
 
 webServer.on("connection", (socket) => {
+
+    socket["nickname"] = "Anonymous";
+
+    socket.on("nickname", (nickname) => {
+        socket["nickname"] = nickname;
+    })
     socket.on("join_room", (roomname) => {
         socket.join(roomname);
         socket.to(roomname).emit("welcome");
+        socket.to(roomname).emit("nickname", socket.nickname);
     });
+
     socket.on("offer", (offer, roomname) => {
         socket.to(roomname).emit("offer", offer);
     });
+
     socket.on("answer", (answer, roomname) => {
         socket.to(roomname).emit("answer", answer);
     });
+
     socket.on("ice", (ice, roomname) => {
         socket.to(roomname).emit("ice", ice);
-    })
+    });
+
+    socket.on("disconnecting", () => {
+        socket.rooms.forEach((room) => {
+            socket.to(room).emit("bye", socket.nickname);
+        })
+    });
 });
+
 
 
 

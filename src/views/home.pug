@@ -8,18 +8,30 @@ html(lang="en")
         title Choom
     body
         header 
-            h1 Choom
+            a(href="/") Choom
         main
             div#welcome
-                form
-                    input(type="text", required, placeholder="Room Name")
-                    button Enter
+                div#nickname
+                   form
+                        input(type="text", required, placeholder="Write Your Nickname")
+                        button Save 
+                div#createRoom
+                    form
+                        input(type="text", required, placeholder="Room Name")
+                        button Enter
+
             div#call
+                h3
                 div#myStream
                     video#myFace(autoplay, playinline, width="400", height="400")
                     button#mute Mute 
                     button#camera Turn Camera Off
                     select#cameras
                     video#peerFace(autoplay, playinline, width="400", height="400")
+                div#chatroom
+                    ul 
+                    form
+                        input(type="text", placeholder="Write Your Message")
+                        button Send    
         script(src="/socket.io/socket.io.js")    
         script(src="/public/js/app.js")    
