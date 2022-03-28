@@ -189,22 +189,18 @@ socketIo.on("offer", async (offer) => {
         });
         myDataChannel.addEventListener("message", handleGet);
     });
-    console.log("received the offer");
     myPeerConnection.setRemoteDescription(offer);
     const answer = await myPeerConnection.createAnswer();
     myPeerConnection.setLocalDescription(answer);
     socketIo.emit("answer", answer, roomname);
-    console.log("sent the answer");
 });
 
 socketIo.on("answer", (answer) => {
-    console.log("received the answer");
     myPeerConnection.setRemoteDescription(answer);
 
 })
 
 socketIo.on("ice", (ice) => {
-    console.log("received candidate");
     myPeerConnection.addIceCandidate(ice);
 })
 //webRTC
@@ -231,7 +227,6 @@ function makeConnection() {
 }
 
 function handleIce(data) {
-    console.log("sent candidate");
     socketIo.emit("ice", data.candidate, roomname);
 }
 
