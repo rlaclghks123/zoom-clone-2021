@@ -123,10 +123,9 @@ nicknameForm.addEventListener("submit", handleNickname);
 
 const createRoom = document.getElementById("createRoom");
 const createRoomForm = createRoom.querySelector("form");
-
+const welcome = document.querySelector("#welcome");
 async function initCall() {
-    createRoom.hidden = true;
-    nicknameDiv.hidden = true;
+    welcome.hidden = true;
     call.hidden = false;
     await getMedia();
     makeConnection();

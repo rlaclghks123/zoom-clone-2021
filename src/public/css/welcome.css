@@ -1,0 +1,31 @@
+#welcome{
+    width: 400px;
+    height: 310px;
+    margin-left: 524px;
+    margin-top: 70px;
+    padding-top: 110px;
+    background-color: aquamarine;
+    border-radius: 120px;
+}
+
+#nickname,#createRoom{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+#nickname div,#createRoom div{
+    margin-bottom: 20px;
+}
+
+input,button{
+    outline: none;
+    border: none;
+}
+input{
+    height: 35px;
+    border-radius: 20px;
+    text-align: center;
+}
