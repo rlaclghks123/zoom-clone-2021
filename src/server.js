@@ -45,9 +45,6 @@ webServer.on("connection", (socket) => {
     });
 });
 
-
-
-
 const handleListen = () => {
     console.log(`Listening on: https://localhost:3000`);
 }

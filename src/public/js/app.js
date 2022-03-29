@@ -1,5 +1,4 @@
 const socketIo = io();
-
 const myFace = document.getElementById("myFace");
 const muteBtn = document.querySelector("#mute");
 const muteI = muteBtn.querySelector("i");
@@ -120,7 +119,6 @@ function addMessage(nickname) {
 socketIo.on("nickname", addMessage);
 nicknameForm.addEventListener("submit", handleNickname);
 
-// chat form
 
 
 //welcome form
@@ -128,6 +126,8 @@ nicknameForm.addEventListener("submit", handleNickname);
 const createRoom = document.getElementById("createRoom");
 const createRoomForm = createRoom.querySelector("form");
 const welcome = document.querySelector("#welcome");
+
+
 async function initCall() {
     welcome.hidden = true;
     call.hidden = false;
@@ -150,11 +150,14 @@ async function handleWelcome(e) {
 createRoomForm.addEventListener("submit", handleWelcome);
 
 socketIo.on("welcome", async () => {
+    //DataChannel
     myDataChannel = myPeerConnection.createDataChannel("chat");
     myDataChannel.addEventListener("open", () => {
         chatForm.addEventListener("submit", handleSend);
     });
     myDataChannel.addEventListener("message", handleGet);
+
+    //Peer to Peer 연결.
     const offer = await myPeerConnection.createOffer();
     myPeerConnection.setLocalDescription(offer);
     socketIo.emit("offer", offer, roomname);
@@ -177,7 +180,6 @@ function handleSend(event) {
     span.classList.add("span_right");
     chatContent.append(span);
     input.value = "";
-
 }
 
 function handleGet(event) {
@@ -189,6 +191,7 @@ function handleGet(event) {
 
 socketIo.on("offer", async (offer) => {
     chatDiv.hidden = false;
+    //Data Chennal
     myPeerConnection.addEventListener("datachannel", (event) => {
         myDataChannel = event.channel;
         myDataChannel.addEventListener("open", () => {
@@ -196,6 +199,7 @@ socketIo.on("offer", async (offer) => {
         });
         myDataChannel.addEventListener("message", handleGet);
     });
+    //Peer to Peer 연결.
     myPeerConnection.setRemoteDescription(offer);
     const answer = await myPeerConnection.createAnswer();
     myPeerConnection.setLocalDescription(answer);
@@ -211,6 +215,7 @@ socketIo.on("answer", (answer) => {
 socketIo.on("ice", (ice) => {
     myPeerConnection.addIceCandidate(ice);
 })
+
 //webRTC
 
 function makeConnection() {
@@ -227,8 +232,8 @@ function makeConnection() {
         ],
     });
     myPeerConnection.addEventListener("icecandidate", handleIce);
-    myPeerConnection.addEventListener("addstream", handleAddStream);
-    // myPeerConnection.addEventListener("track", handleTrack)
+    // myPeerConnection.addEventListener("addstream", handleAddStream);
+    myPeerConnection.addEventListener("track", handleTrack)
 
 
     myStream.getTracks().forEach((track) => myPeerConnection.addTrack(track, myStream));
@@ -238,15 +243,14 @@ function handleIce(data) {
     socketIo.emit("ice", data.candidate, roomname);
 }
 
-function handleAddStream(data) {
-    const peerFace = document.querySelector("#peerFace");
-    peerFace.srcObject = data.stream;
-}
-// function handleTrack(data) {
-//     console.log("handle track")
-//     const peerFace = document.querySelector("#peerFace")
-//     peerFace.srcObject = data.streams[0]
+// function handleAddStream(data) {
+//     const peerFace = document.querySelector("#peerFace");
+//     peerFace.srcObject = data.stream;
 // }
+function handleTrack(data) {
+    const peerFace = document.querySelector("#peerFace")
+    peerFace.srcObject = data.streams[0]
+}
 
 
 
