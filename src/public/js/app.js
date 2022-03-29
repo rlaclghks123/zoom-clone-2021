@@ -1,8 +1,10 @@
 const socketIo = io();
 
 const myFace = document.getElementById("myFace");
-const muteBtn = document.getElementById("mute");
+const muteBtn = document.querySelector("#mute");
+const muteI = muteBtn.querySelector("i");
 const cameraBtn = document.getElementById("camera");
+const cameraI = cameraBtn.querySelector("i");
 const cameraSelect = document.getElementById("cameras");
 const call = document.getElementById("call");
 const chatDiv = document.getElementById("chatroom");
@@ -10,13 +12,13 @@ const chatForm = chatDiv.querySelector("form");
 const chatContent = chatDiv.querySelector("#chatContent");
 
 call.hidden = true;
-
+chatDiv.hidden = true;
 let myStream;
 let muted = false;
 let cameraOff = false;
 let roomname;
 let myPeerConnection;
-let nickname;
+let nickname = "Anonymous";
 let myDataChannel
 
 async function getCameras() {
@@ -69,24 +71,22 @@ async function getMedia(deviceId) {
 async function handleMuteClick() {
     myStream.getAudioTracks().forEach((track) => track.enabled = !track.enabled);
     if (!muted) {
-        muteBtn.innerText = "Unmute";
         muted = true;
     } else {
-        muteBtn.innerText = "Mute";
         muted = false;
     }
+    muteI.classList = !muted ? "fas fa-volume-mute" : "fas fa-volume-off";
 }
 
 
 function handleCameraClick() {
     myStream.getVideoTracks().forEach((track) => track.enabled = !track.enabled);
     if (cameraOff) {
-        cameraBtn.innerText = "Turn Camera Off";
         cameraOff = false;
     } else {
-        cameraBtn.innerText = "Turn Camera On";
         cameraOff = true;
     }
+    cameraI.classList = !cameraOff ? "fas fa-video-slash" : "fas fa-video";
 }
 
 
@@ -102,9 +102,13 @@ const nicknameForm = nicknameDiv.querySelector("form");
 function handleNickname(e) {
     e.preventDefault();
     const input = nicknameForm.querySelector("input");
+    const name = document.getElementById("name");
     socketIo.emit("nickname", input.value);
     nickname = input.value;
     input.value = "";
+    nicknameForm.hidden = true;
+    name.innerText = `Hello ${nickname}`
+
 }
 
 function addMessage(nickname) {
@@ -137,7 +141,7 @@ async function handleWelcome(e) {
     const input = createRoomForm.querySelector("input");
     await initCall();
     const h3 = call.querySelector("h3");
-    socketIo.emit("join_room", input.value);
+    socketIo.emit("join_room", input.value, () => { alert("누군가와 연결이 되면, 대화창이 나타납니다.") });
     roomname = input.value;
     h3.innerText = `Room : ${roomname}`;
     input.value = "";
@@ -170,17 +174,21 @@ function handleSend(event) {
     const span = document.createElement("span");
     span.innerText = `${nickname} : ${event.data}`;
     span.innerText = `You: ${value}`;
+    span.classList.add("span_right");
     chatContent.append(span);
     input.value = "";
+
 }
 
 function handleGet(event) {
     const span = document.createElement("span");
     span.innerText = `${nickname} : ${event.data}`;
+    span.classList.add("span_left");
     chatContent.append(span);
 }
 
 socketIo.on("offer", async (offer) => {
+    chatDiv.hidden = false;
     myPeerConnection.addEventListener("datachannel", (event) => {
         myDataChannel = event.channel;
         myDataChannel.addEventListener("open", () => {
@@ -195,6 +203,7 @@ socketIo.on("offer", async (offer) => {
 });
 
 socketIo.on("answer", (answer) => {
+    chatDiv.hidden = false;
     myPeerConnection.setRemoteDescription(answer);
 
 })

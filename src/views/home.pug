@@ -12,7 +12,7 @@ html(lang="en")
         main
             div#welcome
                 div#nickname 
-                    div Nickname
+                    div#name Nickname
                     form
                         input(type="text", required, placeholder="Write Your Nickname")
                     
@@ -24,17 +24,24 @@ html(lang="en")
 
             div#call
                 h3
-                div#myStream
-                    video#myFace(autoplay, playinline, width="400", height="400")
-                    button#mute Mute 
-                    button#camera Turn Camera Off
-                    select#cameras
-                    video#peerFace(autoplay, playinline, width="400", height="400")
-                div#chatroom
-                    div#chatContent
-                    div#chatForm
-                        form
-                            input(type="text", placeholder="Write Your Message")
-                            button Send    
+                div#callDiv
+                    div#myStream
+                        div#myStream-column
+                            video#myFace(autoplay, playinline, width="400", height="400")
+                            div#button
+                                select#cameras
+                                button#mute 
+                                    i.fas.fa-volume-mute
+                                button#camera
+                                    i.fas.fa-video-slash
+                        div#myStream-column    
+                            video#peerFace(autoplay, playinline, width="400", height="400")
+                    div#chatroom
+                        div#chatForm
+                            div#chatContent
+                            form
+                                input(type="text", placeholder="Write Your Message")
+                                button Send    
+        script(src="https://kit.fontawesome.com/6478f529f2.js" crossorigin="anonymous")
         script(src="/socket.io/socket.io.js")    
         script(src="/public/js/app.js")    

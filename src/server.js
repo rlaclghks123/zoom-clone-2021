@@ -19,10 +19,11 @@ webServer.on("connection", (socket) => {
     socket.on("nickname", (nickname) => {
         socket["nickname"] = nickname;
     })
-    socket.on("join_room", (roomname) => {
+    socket.on("join_room", (roomname, done) => {
         socket.join(roomname);
         socket.to(roomname).emit("welcome");
         socket.to(roomname).emit("nickname", socket.nickname);
+        done();
     });
 
     socket.on("offer", (offer, roomname) => {
