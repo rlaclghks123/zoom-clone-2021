@@ -12,7 +12,24 @@ app.get("/*", (req, res) => res.redirect("/"));
 const httpServer = http.createServer(app);
 const webServer = socketIO(httpServer);
 
+function publicRooms() {
+    const { sockets: {
+        adapter: { sids, rooms }
+    } } = webServer;
+    const publicRooms = [];
+    rooms.forEach((_, key) => {
+        if (sids.get(key) === undefined) {
+            publicRooms.push(key);
+        }
+    });
+    return publicRooms;
+};
+
+
 webServer.on("connection", (socket) => {
+    webServer.sockets.emit("room_change", publicRooms());
+
+    socket.on("disconnect", () => { webServer.sockets.emit("room_change", publicRooms()) });
 
     socket["nickname"] = "Anonymous";
 

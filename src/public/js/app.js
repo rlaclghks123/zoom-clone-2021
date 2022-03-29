@@ -214,7 +214,23 @@ socketIo.on("answer", (answer) => {
 
 socketIo.on("ice", (ice) => {
     myPeerConnection.addIceCandidate(ice);
-})
+});
+
+
+socketIo.on("room_change", (rooms) => {
+    const roomNumber = document.getElementById("roomNumber");
+    const roomNumberUl = roomNumber.querySelector("ul");
+    roomNumberUl.innerText = "";
+    rooms.forEach((room) => {
+        const li = document.createElement("li");
+        li.innerText = `Current Room : ${room}`;
+        roomNumberUl.appendChild(li);
+        console.log(li);
+        if (room.length === 0) {
+            return;
+        }
+    });
+});
 
 //webRTC
 
@@ -251,6 +267,7 @@ function handleTrack(data) {
     const peerFace = document.querySelector("#peerFace")
     peerFace.srcObject = data.streams[0]
 }
+
 
 
 

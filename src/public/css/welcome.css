@@ -1,12 +1,39 @@
-#welcome{
+#welcome-flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#create,
+#roomNumber{
     width: 400px;
     height: 310px;
-    margin-left: 524px;
-    margin-top: 70px;
-    padding-top: 110px;
+    margin: 0px 30px;
+    padding: 30px;
     background-color: aquamarine;
     border-radius: 120px;
 }
+
+#create{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#roomNumber{
+    display: flex;
+    flex-direction: column;
+}
+#roomNumber ul{
+    margin-top: 30px;
+    height: 250px;
+}
+#roomNumber li{
+    margin: 15px 0px;
+}
+
+
 
 #nickname,#createRoom{
     display: flex;
